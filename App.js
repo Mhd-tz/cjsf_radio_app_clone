@@ -8,6 +8,8 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Favorites from './src/screens/Favorites/Favorites';
+import Radio from './src/screens/Radio/Radio';
+// import Radio from './src/screens/Radio/Radio';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,7 +50,7 @@ function MyTabs() {
           ),
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Home"
         component={Radio}
         options={{
@@ -64,7 +66,7 @@ function MyTabs() {
             // <FontAwesomeIcon icon={faCircleDot} size={size} color={color} />
           ),
         }}
-      /> */}
+      />
       {/* <Tab.Screen
         name="Schedule"
         component={Schedule}
