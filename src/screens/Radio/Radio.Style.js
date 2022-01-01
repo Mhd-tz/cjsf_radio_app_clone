@@ -54,11 +54,12 @@ export default StyleSheet.create({
   panelActive: {
     backgroundColor: '#3D225A',
     width: '100%',
-    height: 55,
-    justifyContent: 'center',
+    height: 125,
+    justifyContent: 'flex-start',
     alignItems: 'center',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    paddingTop: 20,
   },
   panelInActive: {
     display: 'none',

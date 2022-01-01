@@ -1,6 +1,12 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -9,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Favorites from './src/screens/Favorites/Favorites';
 import Radio from './src/screens/Radio/Radio';
+import Schedule from './src/screens/Schedule/Schedule';
 // import Radio from './src/screens/Radio/Radio';
 
 const Stack = createStackNavigator();
@@ -19,12 +26,22 @@ function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'black',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: 'white',
+        tabBarInactiveTintColor: '#A0ABB8',
+        tabBarStyle: {
+          position: 'absolute',
+          backgroundColor: '#2F1947',
+          height: 65,
+          paddingTop: 5,
+          paddingBottom: 5,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          borderTopColor: '#2F1947',
+        },
       }}
       initialRouteName="Home"
       lazy="false"
-      barStyle={{backgroundColor: '#fff'}}
+      barStyle={{backgroundColor: 'red'}}
       activeColor="#000"
       inactiveColor="#cfd8dc">
       <Tab.Screen
@@ -41,7 +58,7 @@ function MyTabs() {
           },
           headerTitleStyle: {color: 'white', padding: 10},
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? '#000' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
               Favorites
             </Text>
           ),
@@ -56,7 +73,7 @@ function MyTabs() {
         options={{
           headerShown: false,
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? '#000' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
               Radio
             </Text>
           ),
@@ -67,21 +84,21 @@ function MyTabs() {
           ),
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Schedule"
         component={Schedule}
         options={{
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: 'blue',
-            height: headerHeight,
-            shadowColor: '#000',
-            shadowOpacity: 1,
-            elevation: 7,
-          },
-          headerTitleStyle: {color: 'white', padding: 10},
+          headerShown: false,
+          // headerStyle: {
+          //   backgroundColor: 'transparent',
+          //   height: headerHeight,
+          //   // shadowColor: '#000',
+          //   // shadowOpacity: 1,
+          //   // elevation: 7,
+          // },
+          // headerTitleStyle: {color: 'white', padding: 10},
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? '#000' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
               Schedule
             </Text>
           ),
@@ -91,7 +108,7 @@ function MyTabs() {
             // <FAIcon name="calendar" size={size} color={color} />
           ),
         }}
-      /> */}
+      />
     </Tab.Navigator>
   );
 }

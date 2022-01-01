@@ -80,7 +80,7 @@ function Radio() {
       color: 'red',
     },
     style: {
-      height: height * 1.1,
+      height: height * 1.17,
       paddingTop: 20,
       paddingBottom: 0,
       paddingLeft: 25,

@@ -10,9 +10,11 @@ import {
   Image,
 } from 'react-native';
 import {useState, useEffect} from 'react';
+
 import RadioImage1 from '../../../assets/images/RadioImage1.png';
 import RadioImage2 from '../../../assets/images/RadioImage2.png';
 import RadioImage3 from '../../../assets/images/RadioImage3.png';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IIcon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,6 +42,50 @@ export default function Card({
     };
     changeImage();
   }, []);
+
+  // const backgroundColor = [
+  //   '#1d3557',
+  //   '#457b9d',
+  //   '#a8dadc',
+  //   '#e63946',
+  //   '#e76f51',
+  //   '#f4a261',
+  //   '#e9c46a',
+  //   '#2a9d8f',
+  //   '#00CEFF',
+  //   '#ef476f',
+  //   '#264653',
+  //   '#9b5de5',
+  // ];
+  const backgroundColor = [
+    '#ff4b1f',
+    '#FF0099',
+    '#8E2DE2',
+    '#DCE35B',
+    '#f12711',
+    '#ee0979',
+    '#00B4DB',
+    '#00b09b',
+    '#159957',
+    '#C33764',
+  ];
+  const gradientColor = [
+    '#45B649',
+    '#ff6a00',
+    '#4A00E0',
+    '#b91d73',
+    '#f5af19',
+    '#237A57',
+    '#0083B0',
+    '#96c93d',
+    '#155799',
+    '#1D2671',
+  ];
+  const randomColor =
+    backgroundColor[Math.floor(Math.random() * backgroundColor.length)];
+
+  const randomGradientColor =
+    gradientColor[Math.floor(Math.random() * gradientColor.length)];
 
   const renderModal = () => {
     if (upcoming) {
@@ -96,19 +142,25 @@ export default function Card({
     } else if (schedule) {
       return (
         <View>
-          <TouchableOpacity
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={[randomColor, randomGradientColor]}
             style={[styles.scheduleCard, {width: width, height: height}]}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.time}>
-              {startTime} : {endTime}
-            </Text>
-            <Text numberOfLines={2} style={styles.description}>
-              {shortDescription}
-            </Text>
-            <View style={styles.details}>
-              <Text style={styles.detailsText}>Show Details</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.time}>
+                {startTime} : {endTime}
+              </Text>
+              <Text numberOfLines={2} style={styles.description}>
+                {shortDescription}
+              </Text>
+              <View style={styles.details}>
+                <IIcon name="md-heart-outline" size={23} color="black" />
+              </View>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
       );
     }
@@ -175,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 15,
+    marginRight: 10,
   },
   moreButton: {
     backgroundColor: 'transparent',
@@ -184,55 +236,51 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 5,
+    marginRight: 0,
   },
+  /*******************Schedule********************/
   scheduleCard: {
     marginLeft: 25,
     marginRight: 10,
     marginTop: 0,
     marginBottom: 10,
     borderRadius: 15,
-    // padding: 15,
-    paddingTop: 10,
+    paddingTop: 5,
     paddingBottom: 15,
     paddingLeft: 15,
     paddingRight: 15,
-    backgroundColor: 'red',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
     fontSize: 18,
     color: 'white',
     fontFamily: 'Helvetica',
+    marginBottom: 5,
   },
   time: {
     fontSize: 16,
     fontStyle: 'italic',
     color: 'white',
     fontFamily: 'Helvetica',
-    marginBottom: 4,
+    marginBottom: 5,
   },
   description: {
     fontSize: 15,
     color: 'white',
     fontFamily: 'Helvetica',
+    marginBottom: 5,
   },
   details: {
-    position: 'absolute',
+    bottom: -5,
     backgroundColor: 'white',
-    width: 90,
+    width: 30,
     height: 30,
-    borderRadius: 50,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 25,
-    right: 0,
-    bottom: 10,
-  },
-  detailsText: {
-    fontSize: 13,
-    color: 'black',
-    fontFamily: 'Helvetica',
-    // textAlign: 'center',
   },
 });

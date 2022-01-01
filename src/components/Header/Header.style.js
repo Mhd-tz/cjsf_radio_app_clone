@@ -27,12 +27,7 @@ export default StyleSheet.create({
   aboutIcon: {
     position: 'absolute',
     right: 15,
-    top: 11,
-  },
-  aboutIconText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 20,
+    top: 12,
   },
   aboutContainer: {
     flex: 1,
@@ -65,19 +60,22 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+
+  /***********************Schedule*************************/
   scheduleContainer: {
-    position: 'absolute',
+    flex: 1,
+    top: 0,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    top: 0,
+    backgroundColor: 'transparent',
   },
 
   scheduleHeader: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     elevation: 5,
     overflow: 'hidden',
     width: '100%',
@@ -85,8 +83,7 @@ export default StyleSheet.create({
   },
   scheduleTitle: {
     color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginLeft: 25,
+    fontWeight: '500',
+    fontSize: 22,
   },
 });

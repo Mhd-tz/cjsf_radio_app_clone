@@ -11,7 +11,7 @@ import {useState, useEffect} from 'react';
 
 import DayList from '../DayList/DayList';
 
-export default function WeekList({data}) {
+export default function WeekList({data, title}) {
   var daysData = [
     data.Sunday,
     data.Monday,
@@ -45,8 +45,8 @@ export default function WeekList({data}) {
           <DayList
             schedule
             data={item}
-            width={0.75 * Dimensions.get('window').width}
-            height={130}
+            width={0.4 * Dimensions.get('window').width}
+            height={0.235 * Dimensions.get('window').height}
           />
         )}
         renderSectionHeader={({section: {title}}) => (
@@ -56,7 +56,8 @@ export default function WeekList({data}) {
                 fontSize: 25,
                 fontWeight: 'bold',
                 marginLeft: 22,
-                color: 'grey',
+                color: 'white',
+                marginTop: 20,
               }}>
               {title}
             </Text>
@@ -64,7 +65,7 @@ export default function WeekList({data}) {
               style={{
                 width: '100%',
                 borderBottomWidth: 1,
-                borderBottomColor: 'gray',
+                borderBottomColor: 'black',
                 marginLeft: 22,
               }}
             />
@@ -82,10 +83,22 @@ export default function WeekList({data}) {
         keyExtractor={(item, index) => item + index.toString()}
         stickySectionHeadersEnabled={false}
         ListHeaderComponent={() => {
-          return <View style={{height: 10}} />;
+          return (
+            <View
+              style={{
+                height: 70,
+                backgroundColor: 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: 'white', fontWeight: '500', fontSize: 22}}>
+                {title}
+              </Text>
+            </View>
+          );
         }}
         ListFooterComponent={() => {
-          return <View style={{height: 25}} />;
+          return <View style={{height: 100}} />;
         }}
       />
     </View>
