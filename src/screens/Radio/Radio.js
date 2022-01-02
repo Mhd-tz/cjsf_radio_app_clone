@@ -170,6 +170,52 @@ function Radio() {
     console.log('upcoming', upcoming);
   }, [upcoming]);
 
+  const [schedule, setSchedule] = useState([]);
+  // fetch weekly schedule
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://www.cjsf.ca/api/station/programs_by_week',
+      );
+      const json = await response.json();
+      setSchedule(json);
+    };
+    fetchData();
+  }, []);
+
+  // const [day, setDay] = useState([]);
+  // // setDays to the days of the current radio program
+
+  // useEffect(() => {
+  // const fetchData = async () => {
+  //   const response = await fetch(
+  //     'https://www.cjsf.ca/api/station/programs_by_week',
+  //   );
+  // const json = await response.json();
+  // // search the current radio program days and set the day state
+  // const days = json.filter(
+  //   item => item.program_id === radioData.program_id,
+  // );
+  // setDay(days);
+  //   const getDays = async () => {
+  //     const url = 'https://www.cjsf.ca/api/station/programs_by_week';
+  //     fetch(url)
+  //       .then(res => res.json())
+  //       .then(res =>
+  //         res.filter(item => item.program_id === radioData.program_id),
+  //       )
+  //       .then(res => {
+  //         setDay(res);
+  //       })
+  //       .catch(error => console.error(error));
+  //   };
+  //   getDays();
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log('day', day);
+  // }, [day]);
+
   // render the radio Screen
   return (
     <ImageBackground

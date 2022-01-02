@@ -29,7 +29,6 @@ function Schedule() {
       source={require('../../../assets/images/ScheduleBackground.jpg')}
       style={{width: '100%', height: '100%', flex: 1}}>
       <View style={{flex: 1, padding: 0, margin: 0}}>
-        <Header title="Schedule" isSchedule height={headerHeight} />
         <SafeAreaView>
           <View>
             <WeekList data={schedule} title={'Schedule'} />

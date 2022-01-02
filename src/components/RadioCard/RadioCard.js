@@ -9,6 +9,7 @@ import {
   Animated,
   Easing,
   StyleSheet,
+  Button,
 } from 'react-native';
 import {useState, useEffect} from 'react';
 
@@ -18,6 +19,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import RadioImage1 from '../../../assets/images/RadioImage1.png';
 import RadioImage2 from '../../../assets/images/RadioImage2.png';
 import RadioImage3 from '../../../assets/images/RadioImage3.png';
+import Modal from 'react-native-modal';
+import Detail from '../Detail/Detail';
 
 export default function RadioCard({
   title,
@@ -80,6 +83,16 @@ export default function RadioCard({
     wrapperStyle: {},
   });
 
+  // set the modal data to the data of the card that was clicked
+  const [modalData, setModalData] = useState({
+    title: title,
+    startTime: startTime,
+    endTime: endTime,
+    description: description,
+    shortDescription: shortDescription,
+    backgroundColor: backgroundColor,
+    color: color,
+  });
   // Image renderer
   const images = [RadioImage1, RadioImage2, RadioImage3];
   const [imageIndex, setImageIndex] = useState(0);
@@ -92,15 +105,17 @@ export default function RadioCard({
     changeImage();
   }, []);
 
-  // const autoLinkDescription = (
-  //   <Autolink text={description} linkStyle={{color: 'blue'}} />
-  // );
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onPress = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   const renderModal = () => {
     return (
       <View>
         <TouchableOpacity
-          style={[styles.card, {backgroundColor: backgroundColor}]}>
+          style={[styles.card, {backgroundColor: backgroundColor}]}
+          onPress={onPress}>
           <View style={styles.icon}>
             <Icon name="md-heart-outline" size={23} color={color} />
           </View>
@@ -149,11 +164,18 @@ export default function RadioCard({
             <ReadMore
               {...readMoreProps}
               style={[styles.descriptionText, {color: color}]}>
-              {/* {autoLinkDescription} */}
               {description}
             </ReadMore>
           </View>
         </TouchableOpacity>
+        <Detail
+          isModalVisible={isModalVisible}
+          setModalVisible={setIsModalVisible}
+          title={title}
+          startTime={startTime}
+          endTime={endTime}
+          description={description}
+        />
       </View>
     );
   };
