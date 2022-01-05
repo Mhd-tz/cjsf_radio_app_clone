@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {Text, View, Button, TouchableOpacity} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './Header.style';
 
@@ -14,23 +16,30 @@ export default function Header({
   isFavorites,
   isAbout,
 }) {
-  const [about, setAbout] = useState(false);
-  //function to toggle about
-  // const toggleAbout = () => {
-  //   setAbout(!about);
-  // };
+  const navigation = useNavigation();
 
   const radioHeaderHeight = getStatusBarHeight() + 50;
   const aboutHeaderHeight = getStatusBarHeight() + 40;
 
+  const onPressAbout = () => {
+    console.log('onPressAbout');
+    navigation.navigate('About');
+  };
+
+  // const onPressBack = () => {
+  //   navigation.goBack();
+  // };
+
   if (isAbout) {
     return (
-      <View style={[styles.aboutContainer, {height: aboutHeaderHeight}]}>
-        <View style={[styles.aboutHeader, {backgroundColor: 'blue'}]}>
-          <TouchableOpacity style={styles.backIcon}>
-            <Text style={styles.backIconText}>Back</Text>
+      <View style={[styles.container, {height: height}]}>
+        <View style={[styles.aboutHeader, {backgroundColor: backgroundColor}]}>
+          <TouchableOpacity
+            style={styles.backIcon}
+            onPress={() => navigation.goBack()}>
+            <Icon name="ios-arrow-back" size={30} color="black" />
           </TouchableOpacity>
-          <Text style={styles.aboutTitle}>About</Text>
+          <Text style={styles.aboutTitle}>{title}</Text>
         </View>
       </View>
     );
@@ -39,7 +48,9 @@ export default function Header({
       <View style={[styles.container, {height: height}]}>
         <View style={[styles.radioHeader, {backgroundColor: backgroundColor}]}>
           <Text style={styles.radioTitle}>{title}</Text>
-          <TouchableOpacity style={styles.aboutIcon}>
+          <TouchableOpacity
+            style={styles.aboutIcon}
+            onPress={() => navigation.navigate('About')}>
             <View style={styles.aboutIcon}>
               <Icon
                 name="md-information-circle-outline"

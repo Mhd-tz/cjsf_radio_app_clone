@@ -16,13 +16,54 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import IIcon from 'react-native-vector-icons/Ionicons';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import LinearGradient from 'react-native-linear-gradient';
-import SoundPlayer from 'react-native-sound-player';
+// import SoundPlayer from 'react-native-sound-player';
+// import Sound from 'react-native-sound';
 
 import Header from '../../components/Header/Header.js';
 import RadioCard from '../../components/RadioCard/RadioCard';
 import DayList from '../../components/DayList/DayList';
 
 const window = Dimensions.get('window');
+
+var Sound = require('react-native-sound');
+Sound.setCategory('Playback');
+
+var audio = new Sound('https://www.cjsf.ca:8443/listen-hq', null, error => {
+  if (error) {
+    console.log('failed to load the sound', error);
+    return;
+  }
+  // if loaded successfully
+  console.log(
+    'duration in seconds: ' +
+      audio.getDuration() +
+      'number of channels: ' +
+      audio.getNumberOfChannels(),
+  );
+});
+
+// Sound.setCategory('Playback');
+
+// const audio = new Sound('https://www.cjsf.ca:8443/listen-hq', null, error => {
+//   if (error) {
+//     console.log('failed to load the sound', error);
+//     return;
+//   }
+//   // audio.play(success => {
+//   //   if (success) {
+//   //     console.log('successfully finished playing');
+//   //   } else {
+//   //     console.log('playback failed due to audio decoding errors');
+//   //   }
+//   // });
+//   // if loaded successfully
+//   console.log(
+//     'duration in seconds: ' +
+//       audio.getDuration() +
+//       'number of channels: ' +
+//       audio.getNumberOfChannels(),
+//   );
+// });
 
 // var Sound = require('react-native-sound');
 
@@ -80,11 +121,11 @@ function Radio() {
       color: 'red',
     },
     style: {
-      height: height * 1.17,
+      height: Dimensions.get('screen').height * 1.12,
       paddingTop: 20,
       paddingBottom: 0,
-      paddingLeft: 25,
-      paddingRight: 25,
+      paddingLeft: 20,
+      paddingRight: 20,
       opacity: 1,
       backgroundColor: 'rgba(39,2,61,1)',
       blurRadius: 1,
@@ -114,15 +155,60 @@ function Radio() {
 
   // state for radio player
   const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    audio.setVolume(1);
+    return () => {
+      audio.release();
+    };
+  }, []);
+
   const playPause = () => {
-    if (playing) {
-      SoundPlayer.stop();
+    if (audio.isPlaying()) {
+      audio.pause();
       setPlaying(false);
     } else {
-      SoundPlayer.playUrl('https://www.cjsf.ca:8443/listen-hq');
       setPlaying(true);
+      audio.play(success => {
+        if (success) {
+          setPlaying(false);
+          console.log('successfully finished playing');
+        } else {
+          setPlaying(false);
+          console.log('playback failed due to audio decoding errors');
+        }
+      });
     }
   };
+
+  // useEffect(() => {
+  //   audio.setVolume(1);
+  //   return () => {
+  //     audio.release();
+  //   };
+  // }, []);
+
+  // const playPause = () => {
+  //   if (audio.isPlaying()) {
+  //     audio.pause();
+  //     setPlaying(false);
+  //   } else {
+  //     setPlaying(true);
+  //     audio.play();
+  //   }
+  // };
+  // const playPause = () => {
+  //   if (playing) {
+  //     SoundPlayer.stop();
+  //     setPlaying(false);
+  //   } else {
+  //     SoundPlayer.playUrl('https://www.cjsf.ca:8443/listen-hq');
+  //     setPlaying(true);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   console.log('playing', playing);
+  // }, [playing]);
   //   useEffect(() => {
   //     audio.setVolume(1);
   //     return () => {
@@ -170,18 +256,18 @@ function Radio() {
     console.log('upcoming', upcoming);
   }, [upcoming]);
 
-  const [schedule, setSchedule] = useState([]);
-  // fetch weekly schedule
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        'https://www.cjsf.ca/api/station/programs_by_week',
-      );
-      const json = await response.json();
-      setSchedule(json);
-    };
-    fetchData();
-  }, []);
+  // const [schedule, setSchedule] = useState([]);
+  // // fetch weekly schedule
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await fetch(
+  //       'https://www.cjsf.ca/api/station/programs_by_week',
+  //     );
+  //     const json = await response.json();
+  //     setSchedule(json);
+  //   };
+  //   fetchData();
+  // }, []);
 
   // const [day, setDay] = useState([]);
   // // setDays to the days of the current radio program
@@ -317,8 +403,10 @@ function Radio() {
             <DayList
               data={upcoming}
               upcoming
-              width={0.88 * Dimensions.get('window').width}
-              height={0.08 * Dimensions.get('window').height}
+              // width={'100%'}
+              width={0.88 * Dimensions.get('screen').width}
+              // height={0.08 * Dimensions.get('window').height}
+              // height={0.075 * Dimensions.get('screen').height}
             />
           </View>
         </SwipeablePanel>

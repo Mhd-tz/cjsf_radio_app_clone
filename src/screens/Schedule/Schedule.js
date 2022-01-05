@@ -1,5 +1,11 @@
 import * as React from 'react';
-import {Text, View, SafeAreaView, ImageBackground} from 'react-native';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useState, useEffect} from 'react';
 import WeekList from '../../components/WeekList/WeekList';
@@ -31,7 +37,12 @@ function Schedule() {
       <View style={{flex: 1, padding: 0, margin: 0}}>
         <SafeAreaView>
           <View>
-            <WeekList data={schedule} title={'Schedule'} />
+            <WeekList
+              data={schedule}
+              title={'Schedule'}
+              width={0.4 * Dimensions.get('window').width}
+              height={0.3 * Dimensions.get('screen').height}
+            />
           </View>
         </SafeAreaView>
       </View>

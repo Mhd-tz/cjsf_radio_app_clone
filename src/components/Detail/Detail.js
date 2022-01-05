@@ -14,72 +14,182 @@ import Modal from 'react-native-modal';
 import AutoLink from 'react-native-autolink';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IIcon from 'react-native-vector-icons/Ionicons';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef, useCallback, memo} from 'react';
 
 export default function Detail({
   isModalVisible,
-  setModalVisible,
+  setIsModalVisible,
   title,
   description,
   startTime,
   endTime,
+  setIsLiked,
+  setIsLikedIcon,
+  setIsLikedColor,
+  upcoming,
 }) {
+  const [notLiked, setNotLiked] = useState(true);
+  const [likedIcon, setLikedIcon] = useState('heart-outline');
+  const [likedIconColor, setLikedIconColor] = useState('white');
+
+  const makeFavorite = () => {
+    if (notLiked) {
+      setNotLiked(false);
+      setIsLiked(true);
+      setIsLikedIcon('heart');
+      setLikedIcon('heart');
+      setLikedIconColor('red');
+      setIsLikedColor('#f00');
+    } else {
+      setNotLiked(true);
+      setIsLiked(false);
+      setIsLikedIcon('heart-outline');
+      setLikedIcon('heart-outline');
+      setLikedIconColor('white');
+      setIsLikedColor('white');
+    }
+  };
+
+  useEffect(() => {
+    const makeFavorite = () => {
+      if (notLiked) {
+        setNotLiked(false);
+        setIsLiked(true);
+        setIsLikedIcon('heart');
+        setLikedIcon('heart');
+        setLikedIconColor('red');
+        setIsLikedColor('#f00');
+      } else {
+        setNotLiked(true);
+        setIsLiked(false);
+        setIsLikedIcon('heart-outline');
+        setLikedIcon('heart-outline');
+        setLikedIconColor('white');
+        setIsLikedColor('white');
+      }
+    };
+    return makeFavorite;
+  }, [notLiked]);
+
   // set the isModalVisible state to false when the modal is closed
   const closeModal = () => {
-    setModalVisible(false);
+    setIsModalVisible(false);
   };
-  return (
-    <View>
-      <Modal
-        style={styles.modal}
-        isVisible={isModalVisible}
-        animationType="fade">
-        <View style={styles.container}>
-          <View
-            style={{
-              width: '100%',
-              height: 50,
-              marginBottom: 10,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <TouchableOpacity
-              style={styles.likeButton}
-              onPress={() => {
-                console.log('like button pressed');
-              }}>
-              <IIcon name="md-heart-outline" size={25} color={'white'} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => closeModal()}>
-              <Icon name="close" size={28} color="white" />
-            </TouchableOpacity>
-          </View>
-          <ScrollView style={styles.scrollContainer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>{title}</Text>
+
+  const renderModalContent = () => {
+    if (upcoming) {
+      return (
+        <View>
+          <Modal
+            style={styles.modal}
+            isVisible={isModalVisible}
+            animationType="fade">
+            <View style={styles.container}>
+              <View
+                style={{
+                  width: '100%',
+                  height: 50,
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                {/* <TouchableOpacity
+                  style={styles.likeButton}
+                  onPress={() => {
+                    console.log('like button pressed');
+                    makeFavorite();
+                  }}>
+                  <IIcon name={likedIcon} size={25} color={likedIconColor} />
+                </TouchableOpacity> */}
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => closeModal()}>
+                  <Icon name="close" size={28} color="white" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView style={styles.scrollContainer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{title}</Text>
+                </View>
+                <View style={styles.timeContainer}>
+                  <Text style={styles.time}>
+                    StartTime: {startTime} - End-Time: {endTime}
+                  </Text>
+                </View>
+                <View style={styles.descriptionContainer}>
+                  <AutoLink
+                    style={styles.description}
+                    text={description}
+                    urlStyle={{color: '#0066ff'}}
+                    onPress={url => {
+                      console.log(url);
+                    }}
+                  />
+                </View>
+              </ScrollView>
             </View>
-            <View style={styles.timeContainer}>
-              <Text style={styles.time}>
-                StartTime: {startTime} - End-Time: {endTime}
-              </Text>
-            </View>
-            <View style={styles.descriptionContainer}>
-              <AutoLink
-                style={styles.description}
-                text={description}
-                urlStyle={{color: '#0066ff'}}
-                onPress={url => {
-                  console.log(url);
-                }}
-              />
-            </View>
-          </ScrollView>
+          </Modal>
         </View>
-      </Modal>
-    </View>
-  );
+      );
+    } else {
+      return (
+        <View>
+          <Modal
+            style={styles.modal}
+            isVisible={isModalVisible}
+            animationType="fade">
+            <View style={styles.container}>
+              <View
+                style={{
+                  width: '100%',
+                  height: 50,
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity
+                  style={styles.likeButton}
+                  onPress={() => {
+                    console.log('like button pressed');
+                    makeFavorite();
+                    // makeLiked();
+                    // makeLiked();
+                  }}>
+                  <IIcon name={likedIcon} size={25} color={likedIconColor} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => closeModal()}>
+                  <Icon name="close" size={28} color="white" />
+                </TouchableOpacity>
+              </View>
+              <ScrollView style={styles.scrollContainer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{title}</Text>
+                </View>
+                <View style={styles.timeContainer}>
+                  <Text style={styles.time}>
+                    Start-Time: {startTime} - End-Time: {endTime}
+                  </Text>
+                </View>
+                <View style={styles.descriptionContainer}>
+                  <AutoLink
+                    style={styles.description}
+                    text={description}
+                    urlStyle={{color: '#0066ff'}}
+                    onPress={url => {
+                      console.log(url);
+                    }}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+          </Modal>
+        </View>
+      );
+    }
+  };
+  return <View>{renderModalContent()}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -146,7 +256,7 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    aliItems: 'flex-start',
     marginTop: 5,
   },
   description: {

@@ -1,6 +1,41 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
+  aboutContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    top: 0,
+  },
+  aboutHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    width: '100%',
+  },
+
+  aboutTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  aboutIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'center',

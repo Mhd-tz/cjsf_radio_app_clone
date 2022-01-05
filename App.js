@@ -16,11 +16,28 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Favorites from './src/screens/Favorites/Favorites';
 import Radio from './src/screens/Radio/Radio';
 import Schedule from './src/screens/Schedule/Schedule';
-// import Radio from './src/screens/Radio/Radio';
+import About from './src/screens/About/About';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const headerHeight = getStatusBarHeight() + 50;
+
+function infoTab() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Radio"
+        component={Radio}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="About"
+        component={About}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
 
 function MyTabs() {
   return (
@@ -31,7 +48,7 @@ function MyTabs() {
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: '#2F1947',
-          height: 65,
+          height: 60,
           paddingTop: 5,
           paddingBottom: 5,
           borderTopLeftRadius: 20,
@@ -50,7 +67,7 @@ function MyTabs() {
         options={{
           headerShown: true,
           headerStyle: {
-            backgroundColor: 'green',
+            backgroundColor: 'red',
             height: headerHeight,
             shadowColor: '#000',
             shadowOpacity: 1,
@@ -58,22 +75,30 @@ function MyTabs() {
           },
           headerTitleStyle: {color: 'white', padding: 10},
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 11}}>
               Favorites
             </Text>
           ),
           tabBarIcon: ({color, size}) => (
-            <Icon name="favorite-border" size={28} color={color} />
+            <Icon name="favorite-border" size={27} color={color} />
           ),
         }}
       />
       <Tab.Screen
         name="Home"
-        component={Radio}
+        component={infoTab}
+        listeners={({navigation}) => ({
+          tabPress: e => {
+            // Prevent default action
+            e.preventDefault();
+            // Navigate to the Details route with params
+            navigation.navigate('Home');
+          },
+        })}
         options={{
           headerShown: false,
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 11}}>
               Radio
             </Text>
           ),
@@ -98,7 +123,7 @@ function MyTabs() {
           // },
           // headerTitleStyle: {color: 'white', padding: 10},
           tabBarLabel: ({focused, color}) => (
-            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 12}}>
+            <Text style={{color: focused ? 'white' : '#cfd8dc', fontSize: 11}}>
               Schedule
             </Text>
           ),

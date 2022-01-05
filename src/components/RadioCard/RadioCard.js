@@ -110,6 +110,10 @@ export default function RadioCard({
     setIsModalVisible(!isModalVisible);
   };
 
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikedIcon, setIsLikedIcon] = useState('heart-outline');
+  const [isLikedColor, setIsLikedColor] = useState('white');
+
   const renderModal = () => {
     return (
       <View>
@@ -117,7 +121,7 @@ export default function RadioCard({
           style={[styles.card, {backgroundColor: backgroundColor}]}
           onPress={onPress}>
           <View style={styles.icon}>
-            <Icon name="md-heart-outline" size={23} color={color} />
+            <Icon name={isLikedIcon} size={23} color={isLikedColor} />
           </View>
           <Animated.View
             style={[
@@ -170,11 +174,14 @@ export default function RadioCard({
         </TouchableOpacity>
         <Detail
           isModalVisible={isModalVisible}
-          setModalVisible={setIsModalVisible}
+          setIsModalVisible={setIsModalVisible}
           title={title}
           startTime={startTime}
           endTime={endTime}
           description={description}
+          setIsLiked={setIsLiked}
+          setIsLikedIcon={setIsLikedIcon}
+          setIsLikedColor={setIsLikedColor}
         />
       </View>
     );
@@ -187,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     padding: 15,
-    marginTop: 30,
+    marginTop: 15,
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
@@ -229,6 +236,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
+    marginTop: 5,
   },
   titleText: {
     fontSize: 16,
@@ -238,7 +246,7 @@ const styles = StyleSheet.create({
 
   shortDescription: {
     flex: 1,
-    marginTop: 7,
+    marginTop: 10,
   },
   shortDescriptionText: {
     fontSize: 14,
@@ -248,7 +256,7 @@ const styles = StyleSheet.create({
   },
   time: {
     flex: 1,
-    marginTop: 7,
+    marginTop: 10,
   },
   timeText: {
     fontSize: 14,
@@ -258,10 +266,10 @@ const styles = StyleSheet.create({
   horizontalLine: {
     width: '100%',
     height: 1,
-    borderBottomWidth: 1,
+    borderBottomWidth: 3,
     borderBottomColor: '#432762',
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 10,
+    marginBottom: 10,
   },
   description: {
     flex: 1,
@@ -270,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'black',
     lineHeight: 25,
     fontWeight: '400',

@@ -19,6 +19,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import IIcon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 
+import Detail from '../Detail/Detail';
+
 export default function Card({
   title,
   startTime,
@@ -61,7 +63,7 @@ export default function Card({
     '#ff4b1f',
     '#FF0099',
     '#8E2DE2',
-    '#DCE35B',
+    '#DCE3',
     '#f12711',
     '#ee0979',
     '#00B4DB',
@@ -69,7 +71,7 @@ export default function Card({
     '#159957',
     '#C33764',
   ];
-  const gradientColor = [
+  const gradientColorList = [
     '#45B649',
     '#ff6a00',
     '#4A00E0',
@@ -85,14 +87,73 @@ export default function Card({
     backgroundColor[Math.floor(Math.random() * backgroundColor.length)];
 
   const randomGradientColor =
-    gradientColor[Math.floor(Math.random() * gradientColor.length)];
+    gradientColorList[Math.floor(Math.random() * gradientColorList.length)];
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // const changeColor = () => {
+  //   if (isModalVisible) {
+  //     randomColor = '#0000';
+  //     randomGradientColor = '#0000';
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (isModalVisible) {
+  //     randomColor = 'black';
+  //     randomGradientColor = 'black';
+  //   } else {
+  //     randomColor =
+  //       backgroundColor[Math.floor(Math.random() * backgroundColor.length)];
+  //     randomGradientColor =
+  //       gradientColor[Math.floor(Math.random() * gradientColor.length)];
+  //   }
+  // }, [isModalVisible]);
+
+  // useEffect(() => {
+  //   const changeColor = () => {
+  //     if (isModalVisible) {
+  //       randomColor = 'black';
+  //       randomGradientColor = 'black';
+  //     } else {
+  //       randomColor =
+  //         backgroundColor[Math.floor(Math.random() * backgroundColor.length)];
+  //       randomGradientColor =
+  //         gradientColor[Math.floor(Math.random() * gradientColor.length)];
+  //     }
+  //   };
+  //   changeColor();
+  // }, [isModalVisible]);
+
+  const modalToggle = () => {
+    setIsModalVisible(true);
+  };
+
+  const [color, setColor] = useState('#0000');
+  const [gradientColor, setGradientColor] = useState('#0000');
+  // change randomColor and randomGradientColor when modal is open to black
+  useEffect(() => {
+    if (isModalVisible) {
+      setColor('black');
+      setGradientColor('black');
+    } else {
+      setColor(randomColor);
+      setGradientColor(randomGradientColor);
+    }
+  }, [isModalVisible]);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikedIcon, setIsLikedIcon] = useState('heart-outline');
+  const [isLikedColor, setIsLikedColor] = useState('#432762');
 
   const renderModal = () => {
     if (upcoming) {
       return (
         <View style={styles.upcomingContainer}>
           <TouchableOpacity
-            style={[styles.upcomingCard, {width: width, height: height}]}>
+            style={[styles.upcomingCard, {width: width, height: height}]}
+            onPress={() => {
+              modalToggle();
+            }}>
             <View style={styles.upcomingImage}>
               <Image
                 style={{
@@ -133,10 +194,23 @@ export default function Card({
               style={styles.moreButton}
               onPress={() => {
                 console.log('more has been pressed');
+                modalToggle();
               }}>
               <Icon name="more-vert" size={23} color="white" />
             </TouchableOpacity>
           </TouchableOpacity>
+          <Detail
+            title={title}
+            startTime={startTime}
+            endTime={endTime}
+            description={description}
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            setIsLiked={setIsLiked}
+            setIsLikedIcon={setIsLikedIcon}
+            setIsLikedColor={setIsLikedColor}
+            upComing={upcoming}
+          />
         </View>
       );
     } else if (schedule) {
@@ -145,10 +219,11 @@ export default function Card({
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
-            colors={[randomColor, randomGradientColor]}
+            colors={[color, gradientColor]}
             style={[styles.scheduleCard, {width: width, height: height}]}>
             <TouchableOpacity
-              style={{justifyContent: 'center', alignItems: 'center'}}>
+              style={{justifyContent: 'center', alignItems: 'center'}}
+              onPress={modalToggle}>
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.time}>
                 {startTime} : {endTime}
@@ -157,10 +232,21 @@ export default function Card({
                 {shortDescription}
               </Text>
               <View style={styles.details}>
-                <IIcon name="md-heart-outline" size={23} color="black" />
+                <IIcon name={isLikedIcon} size={23} color={isLikedColor} />
               </View>
             </TouchableOpacity>
           </LinearGradient>
+          <Detail
+            title={title}
+            startTime={startTime}
+            endTime={endTime}
+            description={description}
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            setIsLiked={setIsLiked}
+            setIsLikedIcon={setIsLikedIcon}
+            setIsLikedColor={setIsLikedColor}
+          />
         </View>
       );
     }
@@ -254,6 +340,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  scheduleCarModal: {
+    marginLeft: 25,
+    marginRight: 10,
+    marginTop: 0,
+    marginBottom: 10,
+    borderRadius: 15,
+    paddingTop: 5,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'black',
+  },
   title: {
     fontWeight: 'bold',
     fontSize: 18,
@@ -272,10 +374,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'white',
     fontFamily: 'Helvetica',
-    marginBottom: 5,
+    marginBottom: 8,
   },
   details: {
-    bottom: -5,
+    bottom: -10,
     backgroundColor: 'white',
     width: 30,
     height: 30,

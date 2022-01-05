@@ -11,7 +11,7 @@ import {useState, useEffect} from 'react';
 
 import DayList from '../DayList/DayList';
 
-export default function WeekList({data, title}) {
+export default function WeekList({data, title, width, height}) {
   var daysData = [
     data.Sunday,
     data.Monday,
@@ -42,19 +42,14 @@ export default function WeekList({data, title}) {
         scrollEventThrottle={50}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
-          <DayList
-            schedule
-            data={item}
-            width={0.4 * Dimensions.get('window').width}
-            height={0.235 * Dimensions.get('window').height}
-          />
+          <DayList schedule data={item} width={width} height={height} />
         )}
         renderSectionHeader={({section: {title}}) => (
           <View>
             <Text
               style={{
-                fontSize: 25,
-                fontWeight: 'bold',
+                fontSize: 24,
+                fontWeight: '500',
                 marginLeft: 22,
                 color: 'white',
                 marginTop: 20,
@@ -91,7 +86,13 @@ export default function WeekList({data, title}) {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: 'white', fontWeight: '500', fontSize: 22}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: 24,
+                  marginTop: 10,
+                }}>
                 {title}
               </Text>
             </View>
