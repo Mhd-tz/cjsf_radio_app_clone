@@ -31,6 +31,8 @@ export default function RadioCard({
   startSpinning,
   backgroundColor,
   color,
+  id,
+  isFav,
 }) {
   //Animation
   const [spinValue] = useState(new Animated.Value(0));
@@ -110,9 +112,45 @@ export default function RadioCard({
     setIsModalVisible(!isModalVisible);
   };
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [isLikedIcon, setIsLikedIcon] = useState('heart-outline');
-  const [isLikedColor, setIsLikedColor] = useState('white');
+  // const [isLiked, setIsLiked] = useState(false);
+  // const [isFavoriteIcon, setisFavoriteIcon] = useState('heart-outline');
+  // const [isFavoriteColor, setisFavoriteColor] = useState('white');
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavoriteIcon, setIsFavoriteIcon] = useState('heart-outline');
+  const [isFavoriteColor, setIsFavoriteColor] = useState('white');
+
+  const _onChangeState = () => {
+    console.log(
+      'state changing: ' +
+        isFavorite +
+        ' ' +
+        isFavoriteIcon +
+        ' ' +
+        isFavoriteColor,
+    );
+    if (isFavorite) {
+      isFavorite = false;
+      setIsFavoriteIcon('heart-outline');
+      setIsFavoriteColor('white');
+    } else {
+      isFavorite = true;
+      setIsFavoriteIcon('heart');
+      setIsFavoriteColor('red');
+    }
+    console.log(
+      'state changed: ' +
+        isFavorite +
+        ' ' +
+        isFavoriteIcon +
+        ' ' +
+        isFavoriteColor,
+    );
+  };
+
+  useEffect(() => {
+    setIsFavorite(isFav);
+  }, [isFav]);
 
   const renderModal = () => {
     return (
@@ -121,7 +159,7 @@ export default function RadioCard({
           style={[styles.card, {backgroundColor: backgroundColor}]}
           onPress={onPress}>
           <View style={styles.icon}>
-            <Icon name={isLikedIcon} size={23} color={isLikedColor} />
+            <Icon name={isFavoriteIcon} size={23} color={isFavoriteColor} />
           </View>
           <Animated.View
             style={[
@@ -179,9 +217,14 @@ export default function RadioCard({
           startTime={startTime}
           endTime={endTime}
           description={description}
-          setIsLiked={setIsLiked}
-          setIsLikedIcon={setIsLikedIcon}
-          setIsLikedColor={setIsLikedColor}
+          setIsFavorite={setIsFavorite}
+          setIsFavoriteIcon={setIsFavoriteIcon}
+          setIsFavoriteColor={setIsFavoriteColor}
+          _onChangeState={_onChangeState}
+          isFavorite={isFavorite}
+          isFavoriteIcon={isFavoriteIcon}
+          isFavoriteColor={isFavoriteColor}
+          id={id}
         />
       </View>
     );

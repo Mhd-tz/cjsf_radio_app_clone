@@ -10,6 +10,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useState, useEffect} from 'react';
 import WeekList from '../../components/WeekList/WeekList';
 import Header from '../../components/Header/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Schedule() {
   //Height of the header
@@ -17,14 +18,16 @@ function Schedule() {
   const [schedule, setSchedule] = useState([]);
   // fetch weekly schedule
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        'https://www.cjsf.ca/api/station/programs_by_week',
-      );
-      const json = await response.json();
-      setSchedule(json);
+    const fetchSchedule = async () => {
+      try {
+        scheduleData = await AsyncStorage.getItem('schedule');
+        scheduleData = JSON.parse(scheduleData);
+        setSchedule(scheduleData);
+      } catch (e) {
+        console.log('error fetching the schedule:' + e);
+      }
     };
-    fetchData();
+    fetchSchedule();
   }, []);
 
   // useEffect(() => {

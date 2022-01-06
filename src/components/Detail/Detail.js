@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import AutoLink from 'react-native-autolink';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -23,57 +24,72 @@ export default function Detail({
   description,
   startTime,
   endTime,
-  setIsLiked,
-  setIsLikedIcon,
-  setIsLikedColor,
   upcoming,
+  id,
+  isFavorite,
+  isFavoriteIcon,
+  isFavoriteColor,
+  setIsFavorite,
+  setIsFavoriteIcon,
+  setIsFavoriteColor,
+  changeState,
 }) {
-  const [notLiked, setNotLiked] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
   const [likedIcon, setLikedIcon] = useState('heart-outline');
   const [likedIconColor, setLikedIconColor] = useState('white');
 
+  useEffect(() => {
+    if (isFavorite) {
+      setIsLiked(isFavorite);
+      setLikedIcon(isFavoriteIcon);
+      setLikedIconColor(isFavoriteColor);
+    }
+  }, [isFavorite]);
+
   const makeFavorite = () => {
-    if (notLiked) {
-      setNotLiked(false);
+    if (!isLiked) {
       setIsLiked(true);
-      setIsLikedIcon('heart');
       setLikedIcon('heart');
       setLikedIconColor('red');
-      setIsLikedColor('#f00');
+      setIsFavorite(true);
+      setIsFavoriteIcon('heart');
+      setIsFavoriteColor('red');
+      _storeData();
     } else {
-      setNotLiked(true);
       setIsLiked(false);
-      setIsLikedIcon('heart-outline');
       setLikedIcon('heart-outline');
       setLikedIconColor('white');
-      setIsLikedColor('white');
+      setIsFavorite(false);
+      setIsFavoriteIcon('heart-outline');
+      setIsFavoriteColor('white');
+      _removeData();
     }
   };
 
-  useEffect(() => {
-    const makeFavorite = () => {
-      if (notLiked) {
-        setNotLiked(false);
-        setIsLiked(true);
-        setIsLikedIcon('heart');
-        setLikedIcon('heart');
-        setLikedIconColor('red');
-        setIsLikedColor('#f00');
-      } else {
-        setNotLiked(true);
-        setIsLiked(false);
-        setIsLikedIcon('heart-outline');
-        setLikedIcon('heart-outline');
-        setLikedIconColor('white');
-        setIsLikedColor('white');
-      }
-    };
-    return makeFavorite;
-  }, [notLiked]);
+  const _storeData = async () => {
+    try {
+      await AsyncStorage.setItem(id + '', 'is');
+      console.log('stored');
+      console.log(AsyncStorage.getItem(id + ''));
+    } catch (error) {
+      console.log('Error saving data' + error);
+    }
+  };
 
+  const _removeData = async () => {
+    try {
+      await AsyncStorage.removeItem(id + '');
+      console.log('removed');
+    } catch (error) {
+      console.log('Error removing data' + error);
+    }
+  };
   // set the isModalVisible state to false when the modal is closed
   const closeModal = () => {
     setIsModalVisible(false);
+    if (isLiked != isFavorite) {
+      changeState();
+    }
   };
 
   const renderModalContent = () => {
@@ -82,6 +98,7 @@ export default function Detail({
         <View>
           <Modal
             style={styles.modal}
+            onBackButtonPress={closeModal}
             isVisible={isModalVisible}
             animationType="fade">
             <View style={styles.container}>
@@ -135,6 +152,7 @@ export default function Detail({
       return (
         <View>
           <Modal
+            onBackButtonPress={closeModal}
             style={styles.modal}
             isVisible={isModalVisible}
             animationType="fade">

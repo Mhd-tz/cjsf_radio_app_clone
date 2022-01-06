@@ -7,17 +7,19 @@ import {
   TouchableOpacity,
   Dimensions,
   ImageBackground,
+  Share,
+  Linking,
 } from 'react-native';
 import {useState, useEffect} from 'react';
 import {SwipeablePanel} from 'rn-swipeable-panel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import styles from './Radio.Style';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IIcon from 'react-native-vector-icons/Ionicons';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import LinearGradient from 'react-native-linear-gradient';
-// import SoundPlayer from 'react-native-sound-player';
-// import Sound from 'react-native-sound';
+import Modal from 'react-native-modal';
 
 import Header from '../../components/Header/Header.js';
 import RadioCard from '../../components/RadioCard/RadioCard';
@@ -42,65 +44,54 @@ var audio = new Sound('https://www.cjsf.ca:8443/listen-hq', null, error => {
   );
 });
 
-// Sound.setCategory('Playback');
-
-// const audio = new Sound('https://www.cjsf.ca:8443/listen-hq', null, error => {
-//   if (error) {
-//     console.log('failed to load the sound', error);
-//     return;
-//   }
-//   // audio.play(success => {
-//   //   if (success) {
-//   //     console.log('successfully finished playing');
-//   //   } else {
-//   //     console.log('playback failed due to audio decoding errors');
-//   //   }
-//   // });
-//   // if loaded successfully
-//   console.log(
-//     'duration in seconds: ' +
-//       audio.getDuration() +
-//       'number of channels: ' +
-//       audio.getNumberOfChannels(),
-//   );
-// });
-
-// var Sound = require('react-native-sound');
-
-// Sound.setCategory('Playback');
-
-// var audio = new Sound('https://www.cjsf.ca:8443/listen-hq', null, error => {
-//   if (error) {
-//     console.log('failed to load the sound', error);
-//     return;
-//   }
-//   // if loaded successfully
-//   console.log(
-//     'duration in seconds: ' +
-//       audio.getDuration() +
-//       'number of channels: ' +
-//       audio.getNumberOfChannels(),
-//   );
-// });
-
 function Radio() {
+  // State for current radio and fetches the Now_Playing radio data from the server
+  const [radioData, setRadioData] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        'https://www.cjsf.ca/api/station/now_playing',
+      );
+      const json = await response.json();
+      setRadioData(json);
+    };
+    // const retrieveLikedData = async () => {
+    //   isLiked = await AsyncStorage.getItem(radioData.program_id);
+    //   if (isLiked === 'is') {
+    //     setIsLiked(true);
+    //   } else {
+    //     setIsLiked(false);
+    //   }
+    //   console.log('is liked: ' + isLiked);
+    // };
+    const fetchSchedule = async () => {
+      const response = await fetch(
+        'https://www.cjsf.ca/api/station/programs_by_week',
+      );
+      const json = await response.json();
+      AsyncStorage.setItem('schedule', JSON.stringify(json));
+    };
+    const fetchUpcoming = async () => {
+      const response = await fetch('https://www.cjsf.ca/api/station/upcoming');
+      const json = await response.json();
+      setUpcoming(json);
+    };
+    fetchData().then(() => {
+      // retrieveLikedData();
+    });
+    fetchSchedule();
+    fetchUpcoming();
+  }, []);
+
   // Height of the header
   const radioHeaderHeight = getStatusBarHeight() + 50;
 
   // state for the height and width of the screen
   const [width, setWidth] = useState(window.width);
   const [height, setHeight] = useState(window.height);
-
-  // state for the Upcoming Broadcasts and fetching the data from the API
-  const [upcoming, setUpcoming] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('https://www.cjsf.ca/api/station/upcoming');
-      const json = await response.json();
-      setUpcoming(json);
-    };
-    fetchData();
-  }, []);
 
   // state for the upcoming broadcasts panel
   const [panelProps, setPanelProps] = useState({
@@ -144,7 +135,6 @@ function Radio() {
     onPressCloseButton: () => closePanel(),
     // ...or any prop you want
   });
-
   const [isPanelActive, setIsPanelActive] = useState(false);
   const openPanel = () => {
     setIsPanelActive(true);
@@ -180,72 +170,27 @@ function Radio() {
     }
   };
 
-  // useEffect(() => {
-  //   audio.setVolume(1);
-  //   return () => {
-  //     audio.release();
-  //   };
-  // }, []);
-
-  // const playPause = () => {
-  //   if (audio.isPlaying()) {
-  //     audio.pause();
-  //     setPlaying(false);
-  //   } else {
-  //     setPlaying(true);
-  //     audio.play();
-  //   }
-  // };
-  // const playPause = () => {
-  //   if (playing) {
-  //     SoundPlayer.stop();
-  //     setPlaying(false);
-  //   } else {
-  //     SoundPlayer.playUrl('https://www.cjsf.ca:8443/listen-hq');
-  //     setPlaying(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log('playing', playing);
-  // }, [playing]);
-  //   useEffect(() => {
-  //     audio.setVolume(1);
-  //     return () => {
-  //       audio.release();
-  //     };
-  //   }, []);
-  //   const playPause = () => {
-  //     if (audio.isPlaying()) {
-  //       audio.pause();
-  //       setPlaying(false);
-  //     } else {
-  //       setPlaying(true);
-  //       audio.play(success => {
-  //         if (success) {
-  //           setPlaying(false);
-  //           console.log('successfully finished playing');
-  //         } else {
-  //           setPlaying(false);
-  //           console.log('playback failed due to audio decoding errors');
-  //         }
-  //       });
-  //     }
-  //   };
-
-  // State for current radio and fetches the Now_Playing radio data from the server
-  const [radioData, setRadioData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        'https://www.cjsf.ca/api/station/now_playing',
-      );
-      const json = await response.json();
-      setRadioData(json);
-    };
-    fetchData();
-  }, []);
+  // share function
+  const onShare = async () => {
+    const url = 'https://www.cjsf.ca';
+    const title = radioData.title;
+    try {
+      const result = await Share.share({
+        message:
+          'Tune in and join me to listen to "' +
+          title +
+          '" featured on CJSF 90.1 FM today! ' +
+          url,
+      });
+      if (result.action === Share.sharedAction) {
+        console.log('Shared');
+      } else {
+        alert('Share was cancelled');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   // console logging the radio data
   useEffect(() => {
@@ -256,51 +201,81 @@ function Radio() {
     console.log('upcoming', upcoming);
   }, [upcoming]);
 
-  // const [schedule, setSchedule] = useState([]);
-  // // fetch weekly schedule
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch(
-  //       'https://www.cjsf.ca/api/station/programs_by_week',
-  //     );
-  //     const json = await response.json();
-  //     setSchedule(json);
-  //   };
-  //   fetchData();
-  // }, []);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  // const [day, setDay] = useState([]);
-  // // setDays to the days of the current radio program
-
-  // useEffect(() => {
-  // const fetchData = async () => {
-  //   const response = await fetch(
-  //     'https://www.cjsf.ca/api/station/programs_by_week',
-  //   );
-  // const json = await response.json();
-  // // search the current radio program days and set the day state
-  // const days = json.filter(
-  //   item => item.program_id === radioData.program_id,
-  // );
-  // setDay(days);
-  //   const getDays = async () => {
-  //     const url = 'https://www.cjsf.ca/api/station/programs_by_week';
-  //     fetch(url)
-  //       .then(res => res.json())
-  //       .then(res =>
-  //         res.filter(item => item.program_id === radioData.program_id),
-  //       )
-  //       .then(res => {
-  //         setDay(res);
-  //       })
-  //       .catch(error => console.error(error));
-  //   };
-  //   getDays();
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log('day', day);
-  // }, [day]);
+  const renderMoreModal = () => {
+    return (
+      <View>
+        <Modal
+          style={{justifyContent: 'center'}}
+          onBackdropPress={() => setModalVisible(false)}
+          onBackButtonPress={() => setModalVisible(false)}
+          isVisible={isModalVisible}
+          animationIn="slideInUp">
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: 30,
+              borderRadius: 15,
+              maxHeight: '80%',
+            }}>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  width: '80%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderBottomWidth: 2,
+                  paddingBottom: 10,
+                  borderBottomColor: 'rgba(0,0,0,0.5)',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: 'black',
+                  }}>
+                  More Options
+                </Text>
+              </View>
+              <View style={{width: '100%', alignItems: 'center'}}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 35,
+                    marginBottom: 20,
+                    // margin: 30,
+                  }}
+                  onPress={() => {
+                    console.log('view on site clicked');
+                    Linking.openURL('https://www.cjsf.ca');
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '500',
+                      color: '#3D225A',
+                    }}>
+                    Learn More on Website
+                  </Text>
+                  <Icon name="chevron-right" size={20} color="blue" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
 
   // render the radio Screen
   return (
@@ -329,6 +304,8 @@ function Radio() {
                   startSpinning={playing}
                   backgroundColor={'#573979'}
                   color={'#FFFEFF'}
+                  id={radioData.program_id}
+                  isFav={isLiked}
                 />
               </View>
               <View style={styles.functions}>
@@ -336,6 +313,7 @@ function Radio() {
                   style={styles.shareButton}
                   onPress={() => {
                     console.log('share button pressed');
+                    onShare();
                   }}>
                   <IIcon
                     name="share-social-outline"
@@ -363,8 +341,10 @@ function Radio() {
                   style={styles.moreButton}
                   onPress={() => {
                     console.log('more button pressed');
+                    setModalVisible(true);
                   }}>
                   <Icon name="menu" size={30} color="white" />
+                  {renderMoreModal()}
                 </TouchableOpacity>
               </View>
             </View>
